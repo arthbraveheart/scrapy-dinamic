@@ -19,11 +19,7 @@ class MagaluSpider(scrapy.Spider):
             yield scrapy.Request(
                 url,
                 meta={
-                    "playwright": True,
-                    "playwright_page_methods": [
-                        PageMethod("wait_for_selector", 'script[type="application/ld+json"]'),
-                        PageMethod("wait_for_timeout", 5000),
-                    ],
+
                     "row": row,
                 },
                 callback=self.parse
@@ -52,6 +48,6 @@ class MagaluSpider(scrapy.Spider):
             return ['empty'], ['empty']
 
     def save_to_csv(self, linha):
-        with open(out_path + f"Prices_M_Livre_{self.today}.csv", "a", newline="", encoding="utf-8-sig") as f:
+        with open(f"{out_path}/Prices_M_Livre_{self.today}.csv", "a", newline="", encoding="utf-8-sig") as f:
             csv_writer = csv.writer(f, delimiter=';')
             csv_writer.writerow(linha)
