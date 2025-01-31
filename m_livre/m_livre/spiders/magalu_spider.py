@@ -6,11 +6,11 @@ import time
 from .tools import load_pkl
 from .settings import out_path
 
-class MercadoLivreSpider(scrapy.Spider):
-    name = 'mercado_livre'
+class MagaluSpider(scrapy.Spider):
+    name = 'magalu_spider'
     today = time.strftime("%d-%m-%Y")
     search = load_pkl('dular_eans')
-    base_url = 'https://lista.mercadolivre.com.br/{}#D[A:{}]'
+    base_url = 'https://www.magazineluiza.com.br/busca/{}/?from=submit'
 
     def start_requests(self):
         for i, row in self.search.iterrows():
