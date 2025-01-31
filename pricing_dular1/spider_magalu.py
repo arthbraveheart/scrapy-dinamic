@@ -76,8 +76,8 @@ with open(f"{out_path}/Prices_Magalu_{today}.csv", "w", newline="", encoding="ut
         time.sleep(2)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         element = soup.find('script',{'type':'application/ld+json'})
-        names, prices, url = get_things_done(element)
-        for name, price, url in zip(names,prices,url):
+        names, prices, urls = get_things_done(element)
+        for name, price, url in zip(names,prices,urls):
             if name!='empty':
                 linha = [name, price.replace('.',','), url] + row.to_list()
                 print(linha)

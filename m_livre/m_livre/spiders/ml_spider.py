@@ -28,24 +28,26 @@ class MercadoLivreSpider(scrapy.Spider):
     async def parse(self, response):
         row = response.meta["row"]
         element = response.xpath('//script[@type="application/ld+json"]/text()').get()
-        names, prices = self.get_things_done(element)
-        for name, price in zip(names, prices):
+        names, prices, urls = self.get_things_done(element)
+        for name, price, url in zip(names, prices, urls):
             if name != 'empty':
-                linha = [name, price.replace('.', ','), response.url] + row.to_list()
+                linha = [name, price.replace('.', ','), url] + row.to_list()
                 self.save_to_csv(linha)
             else:
                 continue
 
     def get_things_done(self, element):
         try:
-            pattern_price = re.compile(r'"price":(\d+\.\d{2}|\d+)')
+            pattern_price = re.compile(r'"price":"(\d+\.\d{2}|\d+)"')
             pattern_name = re.compile(r'"Product","name":"(.*?)"')
+            pattern_url = re.compile(r'"url":"(.*?)"')
             prices = re.findall(pattern_price, element)
             names = re.findall(pattern_name, element)
-            return names, prices
+            url = re.findall(pattern_url, element)
+            return names, prices, url
         except:
             print("****************** Fail to get PRICE *******************")
-            return ['empty'], ['empty']
+            return ['empty'], ['empty'], ['empty']
 
     def save_to_csv(self, linha):
         with open(f"{out_path}/Prices_M_Livre_{self.today}.csv", "a", newline="", encoding="utf-8-sig") as f:
