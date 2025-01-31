@@ -9,7 +9,7 @@ from .settings import out_path
 class MercadoLivreSpider(scrapy.Spider):
     name = 'mercado_livre'
     today = time.strftime("%d-%m-%Y")
-    search = load_pkl('dular_eans').iloc[:100,:]
+    search = load_pkl('dular_eans')#.iloc[:100,:]
     base_url = 'https://lista.mercadolivre.com.br/{}#D[A:{}]'
 
     def start_requests(self):

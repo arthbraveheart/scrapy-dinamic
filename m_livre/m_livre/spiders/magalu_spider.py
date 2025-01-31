@@ -9,18 +9,22 @@ from .settings import out_path
 class MagaluSpider(scrapy.Spider):
     name = 'magalu_spider'
     today = time.strftime("%d-%m-%Y")
-    search = load_pkl('dular_eans')
+    search = load_pkl('dular_eans')#.iloc[:20,:]
     base_url = 'https://www.magazineluiza.com.br/busca/{}/?from=submit'
 
     def start_requests(self):
         for i, row in self.search.iterrows():
             ean = row['Ean']
-            url = self.base_url.format(ean, ean)
+            url = self.base_url.format(ean)
             yield scrapy.Request(
                 url,
+                headers={
+                    "x-oxylabs-geo-location":"Brazil",
+                },
                 meta={
-
+                    "proxy": 'https://bravebrave_xJSab:Proxy_1728_Brave@unblock.oxylabs.io:60000',
                     "row": row,
+                    "dont_verify_ssl": True,
                 },
                 callback=self.parse
             )
@@ -38,7 +42,7 @@ class MagaluSpider(scrapy.Spider):
 
     def get_things_done(self, element):
         try:
-            pattern_price = re.compile(r'"price":(\d+\.\d{2}|\d+)')
+            pattern_price = re.compile(r'"price":"(\d+\.\d{2}|\d+)"')
             pattern_name = re.compile(r'"Product","name":"(.*?)"')
             prices = re.findall(pattern_price, element)
             names = re.findall(pattern_name, element)
@@ -48,6 +52,6 @@ class MagaluSpider(scrapy.Spider):
             return ['empty'], ['empty']
 
     def save_to_csv(self, linha):
-        with open(f"{out_path}/Prices_M_Livre_{self.today}.csv", "a", newline="", encoding="utf-8-sig") as f:
+        with open(f"{out_path}/Prices_Magalu_{self.today}.csv", "a", newline="", encoding="utf-8-sig") as f:
             csv_writer = csv.writer(f, delimiter=';')
             csv_writer.writerow(linha)

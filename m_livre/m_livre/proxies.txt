@@ -1,0 +1,4 @@
+redis://localhost:6379
+redis://localhost:6378
+redis://localhost:6377
+redis://localhost:6376
