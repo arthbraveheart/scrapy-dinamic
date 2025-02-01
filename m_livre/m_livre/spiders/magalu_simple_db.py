@@ -5,6 +5,7 @@ import csv
 import time
 from .tools import load_pkl
 from .settings import out_path
+from m_livre.items import ProductItem
 
 class MagaluSpider(scrapy.Spider):
     name = 'magalu_simple_db'
@@ -23,20 +24,22 @@ class MagaluSpider(scrapy.Spider):
                 },
                 meta={
                     "proxy": 'https://bravebrave_xJSab:Proxy_1728_Brave@unblock.oxylabs.io:60000',
-                    "row": row,
+                    "ean": ean,
                     "dont_verify_ssl": True,
                 },
                 callback=self.parse
             )
 
     async def parse(self, response):
-        row = response.meta["row"]
+        ean = response.meta["ean"]
         element = response.xpath('//script[@type="application/ld+json"]/text()').get()
         names, prices, urls = self.get_things_done(element)
         for name, price, url in zip(names, prices, urls):
             if name != 'empty':
-                linha = [name, price.replace('.', ','), url] + row.to_list()
-                self.save_to_csv(linha)
+                linha = dict(name=name, price=price.replace('.', ','), url=url, ean=ean, ) #+ row.to_list()
+                products_items = ProductItem(**linha)
+
+                #self.save_to_csv(linha)
             else:
                 continue
 
