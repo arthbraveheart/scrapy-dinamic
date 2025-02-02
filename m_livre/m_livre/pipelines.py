@@ -20,7 +20,7 @@ Base = declarative_base()
 
 class M_Model(Base):
     __tablename__ = 'magalu'
-    __table_args__ = {'schema': 'public'}  # Remove if not using schemas
+    #__table_args__ = {'schema': 'public'}  # Remove if not using schemas
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
@@ -63,7 +63,7 @@ class MLivrePipeline(object):
                 price=float(item['price']),
                 url=item['url'],
                 ean=int(item['ean']),
-                date_now=item['date_now']
+                #date_now=item['date_now']
             )
             self.session.add(record)
             self.session.commit()

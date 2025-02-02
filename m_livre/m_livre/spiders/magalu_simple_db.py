@@ -37,11 +37,15 @@ class MagaluSpider(scrapy.Spider):
         for name, price, url in zip(names, prices, urls):
             if name != 'empty':
                 linha = dict(name=name, price=price.replace('.', ','), url=url, ean=ean, ) #+ row.to_list()
-                products_items = ProductItem(**linha)
-
+                #products_items = ProductItem(**linha)
+                products_items = ProductItem()
+                products_items['name'] = name
+                products_items['price'] = price#.replace('.', ',')
+                products_items['url'] = url
+                products_items['ean'] = ean
+                yield products_items
                 #self.save_to_csv(linha)
-            else:
-                continue
+
 
     def get_things_done(self, element):
         try:

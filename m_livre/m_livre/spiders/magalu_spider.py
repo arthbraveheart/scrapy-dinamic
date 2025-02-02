@@ -9,7 +9,7 @@ from .settings import out_path
 class MagaluSpider(scrapy.Spider):
     name = 'magalu_spider'
     today = time.strftime("%d-%m-%Y")
-    search = load_pkl('dular_eans')#.iloc[:20,:]
+    search = load_pkl('dular_eans').iloc[:20,:]
     base_url = 'https://www.magazineluiza.com.br/busca/{}/?from=submit'
 
     def start_requests(self):
