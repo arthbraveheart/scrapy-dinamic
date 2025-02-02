@@ -11,12 +11,12 @@ class MagaluSpider(scrapy.Spider):
     name = 'ml_simple_db'
     today = time.strftime("%d-%m-%Y")
     search = load_pkl('dular_eans')#.iloc[:20,:]
-    base_url = 'https://www.magazineluiza.com.br/busca/{}/?from=submit'
+    base_url = 'https://lista.mercadolivre.com.br/{}#D[A:{}]'
 
     def start_requests(self):
         for i, row in self.search.iterrows():
             ean = row['Ean']
-            url = self.base_url.format(ean)
+            url = self.base_url.format(ean,ean)
             yield scrapy.Request(
                 url,
                 headers={
@@ -49,7 +49,7 @@ class MagaluSpider(scrapy.Spider):
 
     def get_things_done(self, element):
         try:
-            pattern_price = re.compile(r'"price":"(\d+\.\d{2}|\d+)"')
+            pattern_price = re.compile(r'"price":(\d+\.\d{2}|\d+)')
             pattern_name = re.compile(r'"Product","name":"(.*?)"')
             pattern_url = re.compile(r'"url":"(.*?)"')
             prices = re.findall(pattern_price, element)
