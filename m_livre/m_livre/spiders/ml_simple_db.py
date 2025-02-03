@@ -7,7 +7,7 @@ from .tools import load_pkl
 from .settings import out_path
 from m_livre.items import ProductItem
 
-class MagaluSpider(scrapy.Spider):
+class MLSpider(scrapy.Spider):
     name = 'ml_simple_db'
     today = time.strftime("%d-%m-%Y")
     search = load_pkl('dular_eans')#.iloc[:20,:]
@@ -19,11 +19,8 @@ class MagaluSpider(scrapy.Spider):
             url = self.base_url.format(ean,ean)
             yield scrapy.Request(
                 url,
-                headers={
-                    "x-oxylabs-geo-location":"Brazil",
-                },
                 meta={
-                    "proxy": 'https://bravebrave_xJSab:Proxy_1728_Brave@unblock.oxylabs.io:60000',
+                    #"proxy": 'https://bravebrave_xJSab:Proxy_1728_Brave@unblock.oxylabs.io:60000',
                     "ean": ean,
                     "dont_verify_ssl": True,
                 },
@@ -39,9 +36,10 @@ class MagaluSpider(scrapy.Spider):
                 linha = dict(name=name, price=price.replace('.', ','), url=url, ean=ean, ) #+ row.to_list()
                 #products_items = ProductItem(**linha)
                 products_items = ProductItem()
+                products_items['seller'] = 'Mercado Livre'
                 products_items['name'] = name
                 products_items['price'] = price#.replace('.', ',')
-                products_items['url'] = url
+                products_items['url'] = url.replace('\\u002F','/')
                 products_items['ean'] = ean
                 yield products_items
                 #self.save_to_csv(linha)

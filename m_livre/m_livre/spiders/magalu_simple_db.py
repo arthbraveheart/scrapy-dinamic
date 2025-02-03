@@ -23,7 +23,7 @@ class MagaluSpider(scrapy.Spider):
                     "x-oxylabs-geo-location":"Brazil",
                 },
                 meta={
-                    "proxy": 'https://bravebrave_xJSab:Proxy_1728_Brave@unblock.oxylabs.io:60000',
+                    "proxy": 'https://ojin_brave_Ch4KD:+Dromedario17@unblock.oxylabs.io:60000',
                     "ean": ean,
                     "dont_verify_ssl": True,
                 },
@@ -39,6 +39,7 @@ class MagaluSpider(scrapy.Spider):
                 linha = dict(name=name, price=price.replace('.', ','), url=url, ean=ean, ) #+ row.to_list()
                 #products_items = ProductItem(**linha)
                 products_items = ProductItem()
+                products_items['seller'] = 'Magazine Luiza'
                 products_items['name'] = name
                 products_items['price'] = price#.replace('.', ',')
                 products_items['url'] = url
@@ -50,7 +51,7 @@ class MagaluSpider(scrapy.Spider):
     def get_things_done(self, element):
         try:
             pattern_price = re.compile(r'"price":"(\d+\.\d{2}|\d+)"')
-            pattern_name = re.compile(r'"Product","name":"(.*?)"')
+            pattern_name = re.compile(r'"name":"(.*?)"')
             pattern_url = re.compile(r'"url":"(.*?)"')
             prices = re.findall(pattern_price, element)
             names = re.findall(pattern_name, element)

@@ -29,11 +29,12 @@ class M_Model(Base):
     ean = Column(BigInteger, nullable=False)  # Matches BIGINT in SQL
     date_now = Column(DateTime, server_default=func.now())  # Database handles default
 
-class ML_Model(Base):
-    __tablename__ = 'mercado_livre'
+class Core_Model(Base):
+    __tablename__ = 'core'
     #__table_args__ = {'schema': 'public'}  # Remove if not using schemas
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    seller = Column(String(255), nullable=False)
     name = Column(String(255), nullable=False)
     price = Column(Numeric(10, 2), nullable=False)
     url = Column(Text, nullable=False)
@@ -41,7 +42,7 @@ class ML_Model(Base):
     date_now = Column(DateTime, server_default=func.now())  # Database handles default
 
 
-class MagaluPipeline(object):
+class CorePipeline(object):
     """
     Modified version using SQLAlchemy ORM for PostgreSQL connection
     """
@@ -69,7 +70,8 @@ class MagaluPipeline(object):
     def process_item(self, item, spider):
         try:
             #item_date = datetime.strptime(item['date_now'], "%d-%m-%Y")
-            record = M_Model(
+            record = Core_Model(
+                seller=item['seller'],
                 name=item['name'],
                 price=float(item['price']),
                 url=item['url'],
