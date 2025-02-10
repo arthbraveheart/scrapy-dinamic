@@ -48,7 +48,7 @@ class CorePipeline(object):
     """
 
     # Update with your credentials
-    DATABASE_URI = "postgresql://postgres:1728@localhost:5432/dular"#"sqlite:///dular"#"postgresql://postgres:1728@localhost:5432/dular"
+    DATABASE_URI = "postgresql://brave:1728@localhost:5432/sun"#"sqlite:///dular"#"postgresql://postgres:1728@localhost:5432/dular"
 
     def __init__(self):
         self.engine = create_engine(self.DATABASE_URI)
