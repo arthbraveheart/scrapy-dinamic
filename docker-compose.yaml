@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    ports:
+      - 5434:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=scrapy
+      - POSTGRES_USER=scrapy
+      - POSTGRES_PASSWORD=scrapy
+  dev:
+    image: scrapy
+    container_name: scrapy
+    volumes:
+      - ${PWD}:/home/scrapy/work
+    command: bash -c 'bash --init-file <(echo ". \"/home/scrapy/.bashrc\"; make run")'
+    env_file:
+      - .env.dev
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+  
+volumes:
+  postgres_data:
