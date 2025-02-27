@@ -14,7 +14,7 @@ services:
     container_name: scrapy
     volumes:
       - ${PWD}:/home/scrapy/work
-    command: bash -c 'bash --init-file <(echo ". \"/home/scrapy/.bashrc\"; make run")'
+    #command: bash -c 'bash --init-file <(echo ". \"/home/scrapy/.bashrc\"; make run")'
     env_file:
       - .env.dev
     stdin_open: true

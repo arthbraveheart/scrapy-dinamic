@@ -30,6 +30,7 @@ pandas==2.2.3
 parsel==1.10.0
 playwright==1.49.1
 Protego==0.4.0
+psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
