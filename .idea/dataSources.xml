@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:/private/var/root/PycharmProjects/pricing_scrapy/m_livre/dular</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="scrapy@localhost" uuid="ef1b577f-96f0-4731-98a2-187b0a5ff9d4">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5434/scrapy</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
