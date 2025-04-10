@@ -6,26 +6,37 @@ import time
 from .tools import load_pkl
 from .settings import out_path
 from m_livre.items import ProductItem
+from ..settings import DATABASE_URI
+from sqlalchemy import create_engine, text
+from contextlib import closing
 
 class MLSpider(scrapy.Spider):
     name = 'leroy_simple_db'
     today = time.strftime("%d-%m-%Y")
     search = load_pkl('dular_eans')#.iloc[:20,:]
     base_url = 'https://www.leroymerlin.com.br/search?term={}&searchTerm={}&searchType=EAN'
+    engine = create_engine(DATABASE_URI)
 
     def start_requests(self):
-        for i, row in self.search.iterrows():
-            ean = row['Ean']
-            url = self.base_url.format(ean,ean)
-            yield scrapy.Request(
-                url,
-                meta={
-                    #"proxy": 'https://bravebrave_xJSab:Proxy_1728_Brave@unblock.oxylabs.io:60000',
-                    "ean": ean,
-                    "dont_verify_ssl": True,
-                },
-                callback=self.parse
+        with closing(self.engine.connect()) as conn:
+            # Use stream_results for PostgreSQL
+            result = conn.execution_options(stream_results=True).execute(
+                text("""SELECT ean FROM "dular_eans" """)  # Only get needed column
             )
+
+            # Use itertools.islice for chunking if needed
+            for row in result:
+                ean = row[0]  # Access by index for better performance
+                url = self.base_url.format(ean, ean)
+                yield scrapy.Request(
+                    url,
+                    meta={
+                        "ean": ean,
+                        "dont_verify_ssl": True,
+                        #"db_row": dict(row)  # Optional: preserve row data
+                    },
+                    callback=self.parse
+                )
 
     async def parse(self, response):
         name = response.xpath("//h1[@itemprop='name']/text()").get()
