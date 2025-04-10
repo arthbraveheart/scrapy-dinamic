@@ -14,7 +14,7 @@ from contextlib import closing
 class CarrefaSpider(scrapy.Spider):
     name = 'carrefas_simple_db'
     today = time.strftime("%d-%m-%Y")
-    search = load_pkl('dular_eans')#.iloc[:20,:]
+    #search = load_pkl('dular_eans')#.iloc[:20,:]
     base_url = 'https://www.carrefour.com.br/busca/{}'
     engine = create_engine(DATABASE_URI)
 

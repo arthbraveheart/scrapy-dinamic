@@ -13,7 +13,7 @@ from contextlib import closing
 class MLSpider(scrapy.Spider):
     name = 'leroy_simple_db'
     today = time.strftime("%d-%m-%Y")
-    search = load_pkl('dular_eans')#.iloc[:20,:]
+    #search = load_pkl('dular_eans')#.iloc[:20,:]
     base_url = 'https://www.leroymerlin.com.br/search?term={}&searchTerm={}&searchType=EAN'
     engine = create_engine(DATABASE_URI)
 

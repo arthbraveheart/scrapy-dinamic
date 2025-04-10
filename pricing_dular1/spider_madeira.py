@@ -58,7 +58,7 @@ def get_things_done(element):
 time1 = time.time()
 
 # Cria o arquivo CSV
-with open(out_path + f"Prices_Madeira_{today}.csv", "w", newline="", encoding="utf-8-sig") as f:
+with open(str(out_path) + f"Prices_Madeira_{today}.csv", "w", newline="", encoding="utf-8-sig") as f:
     # Especifica o separador como ponto e vírgula
     csv_writer = csv.writer(f, delimiter=';')
    
