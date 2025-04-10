@@ -138,3 +138,4 @@ ROTATING_PROXY_LIST = [
 """
 # Optional: Set a delay between requests to avoid being blocked
 #DOWNLOAD_DELAY = 2ß
+DATABASE_URI = "postgresql://scrapy:scrapy@db:5432/scrapy"
