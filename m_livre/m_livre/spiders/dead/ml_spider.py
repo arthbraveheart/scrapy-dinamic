@@ -3,8 +3,8 @@ from scrapy_playwright.page import PageMethod
 import re
 import csv
 import time
-from m_livre.m_livre.spiders.tools import load_pkl
-from m_livre.m_livre.spiders.settings import out_path
+from ..tools import load_pkl
+from ..settings import out_path
 
 class MercadoLivreSpider(scrapy.Spider):
     name = 'mercado_livre'

@@ -1,3 +1,5 @@
+madeira:
+	cd m_livre && scrapy crawl madeira_simple_db
 mercado_livre:
 	cd m_livre && scrapy crawl ml_simple_db
 magalu:

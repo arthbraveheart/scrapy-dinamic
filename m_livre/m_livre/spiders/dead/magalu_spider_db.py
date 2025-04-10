@@ -3,7 +3,7 @@ from scrapy_playwright.page import PageMethod
 from itemloaders.processors import TakeFirst
 import re
 import time
-from m_livre.m_livre.spiders.tools import load_pkl
+from ..tools import load_pkl
 from m_livre.items import ProductItem
 from m_livre.itemloaders import ProductLoader
 

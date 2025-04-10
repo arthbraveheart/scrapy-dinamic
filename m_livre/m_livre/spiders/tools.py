@@ -6,7 +6,7 @@ Created on Tue Oct  8 14:47:14 2024
 """
 
 from .settings import db_path
-
+from urllib.parse import urlencode
 
 def save_pkl(obj, name='object', path=db_path):
     import pickle
@@ -22,3 +22,11 @@ def load_pkl(name='object', path=db_path):
         data = pickle.load(file)
         file.close()
     return data
+
+def url_encoded(base:str,query:str)->str:
+    search_query = query
+    params = {"q": search_query}
+    encoded_params = urlencode(params)
+
+    url = f"{base}?{encoded_params}"
+    return url
