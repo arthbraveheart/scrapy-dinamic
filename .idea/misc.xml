@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (pricing_scrapy)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (pricing_scrapy)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (scrapy-dinamic)" project-jdk-type="Python SDK" />
 </project>
