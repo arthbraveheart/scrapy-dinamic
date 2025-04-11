@@ -1,5 +1,5 @@
 madeira:
-	cd m_livre && scrapy crawl madeira_simple_db
+	cd pricing_dular1 && python spider_madeira_selenium.py
 mercado_livre:
 	cd m_livre && scrapy crawl ml_simple_db
 magalu:
