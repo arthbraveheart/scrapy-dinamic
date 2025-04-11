@@ -5,7 +5,41 @@ RUN groupadd --gid 1024 shared
 RUN useradd -m --group sudo,shared scrapy && passwd -d scrapy
 
 RUN apt-get update && \
-	apt -y install sudo git nano curl gnupg build-essential python3 python3-dev python3-venv postgresql
+	apt -y install sudo git nano curl gnupg build-essential python3 python3-dev python3-venv postgresql && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
+    gnupg \
+    unzip \
+    fonts-liberation \
+    libasound2t64 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libcairo2 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libpango-1.0-0 \
+    libx11-6 \
+    libxcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxkbcommon0 \
+    libxrandr2 \
+    xdg-utils && \
+    # Add Chrome repo using modern keyring approach
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg && \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update -y && \
+    apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
 
 USER scrapy
