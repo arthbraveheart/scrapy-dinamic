@@ -106,6 +106,29 @@ DOWNLOAD_HANDLERS = {
 }
 
 PLAYWRIGHT_BROWSER_TYPE = "firefox"
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 30000  # 30 seconds
+PLAYWRIGHT_DEBUG = True  # Enable verbose logging
+PLAYWRIGHT_LAUNCH_OPTIONS = {
+            "headless": True,
+            "timeout": 60000,  # Increase to 60 seconds
+            #"args": [
+                #"--disable-blink-features=AutomationControlled",
+                #"--no-sandbox",
+                #"--single-process",
+                #"--disable-dev-shm-usage",
+                #"--disable-web-security",
+                #"--aggressive-cache-discard",
+                #"--disable-cache",
+                #"--disable-application-cache",
+                #"--disable-offline-load-stale-cache",
+                #"--disk-cache-size=0",
+                #"--disable-back-forward-cache",
+                #"--disable-notifications",
+                #"--disable-popup-blocking",
+            #],
+        },
+PLAYWRIGHT_MAX_CONTEXTS = 4  # Limit concurrent contexts
+
 
 # Enable Redis as the scheduler and dupefilter
 #SCHEDULER = "scrapy_redis.scheduler.Scheduler"
