@@ -91,16 +91,6 @@ async def process_ean(browser, semaphore, ean, product_name):
                 print(f"Processed EAN: {ean}")
         except Exception as e:
             print(f"Error processing {ean}: {str(e)}")
-            async with async_session() as session:
-                record = Core_Model(
-                    seller='Madeira Madeira',
-                    name='empty',
-                    price=0,
-                    url=url,
-                    ean=ean
-                )
-                session.add(record)
-                await session.commit()
 
 
 async def main():
