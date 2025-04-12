@@ -37,6 +37,8 @@ class DularEans(models.Model):
         managed = False
         db_table = 'dular_eans'
 
+    def __str__(self):
+        return f"{self.description} - {self.ean}"
 
 class DularLinks(models.Model):
     index = models.BigIntegerField(blank=True, null=True)
@@ -104,3 +106,20 @@ class Search(models.Model):
     class Meta:
         managed = False
         db_table = 'search'
+
+class Curva(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    products = models.ManyToManyField(
+        DularEans,
+        related_name='curvas',
+        blank=True,
+        verbose_name='Products in this collection'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Curvas"
