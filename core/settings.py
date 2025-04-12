@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'markdownify.apps.MarkdownifyConfig',
+
+    'authz.apps.AuthzConfig',
+    'target.apps.TargetConfig',
 ]
 
 MIDDLEWARE = [
@@ -118,6 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL ='authz.LowProfile'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
