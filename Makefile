@@ -1,13 +1,13 @@
 madeira:
-	cd pricing_dular1 && python spider_madeira_selenium.py
+	cd core/apps/pricing_dular1 && python spider_madeira_selenium.py
 mercado_livre:
-	cd m_livre && scrapy crawl ml_simple_db
+	cd core/apps/m_livre && scrapy crawl ml_simple_db
 magalu:
-	cd m_livre && scrapy crawl magalu_simple_db
+	cd core/apps/m_livre && scrapy crawl magalu_simple_db
 carrefas:
-	cd m_livre && scrapy crawl carrefas_simple_db
+	cd core/apps/m_livre && scrapy crawl carrefas_simple_db
 leroy:
-	cd m_livre && scrapy crawl leroy_simple_db
+	cd core/apps/m_livre && scrapy crawl leroy_simple_db
 build:
 	docker build . -t scrapy
 docker:
