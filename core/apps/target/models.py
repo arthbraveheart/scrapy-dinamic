@@ -69,7 +69,7 @@ class Mkt(models.Model):
     index = models.BigIntegerField(blank=True, null=True)
     sku = models.FloatField(db_column='SKU', blank=True, null=True)  # Field name made lowercase.
     cód_pai = models.FloatField(db_column='Cód PAI', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    descrição = models.TextField(db_column='Descrição', blank=True, null=True)  # Field name made lowercase.
+    description = models.TextField(db_column='Descrição', blank=True, null=True)  # Field name made lowercase.
     valor_nf = models.FloatField(db_column='Valor NF', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     mercado_livre = models.FloatField(db_column='Mercado Livre', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     magalu = models.FloatField(db_column='MAGALU', blank=True, null=True)  # Field name made lowercase.
