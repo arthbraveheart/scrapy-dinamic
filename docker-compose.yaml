@@ -17,6 +17,8 @@ services:
       - POSTGRES_PASSWORD=scrapy
   dev:
     image: scrapy
+    ports:
+      - 8000:8000
     container_name: scrapy
     volumes:
       - ${PWD}:/home/scrapy/work
