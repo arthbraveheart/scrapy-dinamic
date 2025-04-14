@@ -8,10 +8,10 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 
-BOT_NAME = "m_livre"
+BOT_NAME = "crawlers"
 
-SPIDER_MODULES = ["m_livre.spiders"]
-NEWSPIDER_MODULE = "m_livre.spiders"
+SPIDER_MODULES = ["crawlers.spiders"]
+NEWSPIDER_MODULE = "crawlers.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -71,7 +71,7 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     #"m_livre.pipelines.MLivrePipeline": 300,
     #"m_livre.pipelines.MagaluPipeline":200,
-    "m_livre.pipelines.CorePipeline": 100,
+    "crawlers.pipelines.CorePipeline": 100,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

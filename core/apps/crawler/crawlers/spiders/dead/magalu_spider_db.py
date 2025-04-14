@@ -4,8 +4,8 @@ from itemloaders.processors import TakeFirst
 import re
 import time
 from ..tools import load_pkl
-from m_livre.items import ProductItem
-from m_livre.itemloaders import ProductLoader
+from ...items import ProductItem
+from ...itemloaders import ProductLoader
 
 
 class MagaluSpider(scrapy.Spider):

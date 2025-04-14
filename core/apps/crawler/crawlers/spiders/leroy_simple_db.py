@@ -4,7 +4,7 @@ import re
 import csv
 import time
 from .settings import out_path
-from m_livre.items import ProductItem
+from ..items import ProductItem
 from ..settings import DATABASE_URI
 from sqlalchemy import create_engine, text
 from contextlib import closing

@@ -20,6 +20,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView, RedirectView
 
+from .apps.dash_apps.raw.raw import app
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('django_plotly_dash/', include('django_plotly_dash.urls')),
+    path("dash/raw", TemplateView.as_view(template_name="dashboard/raw.html"), name="raw"),
+    path('crawler/', include('crawler.urls')),
+    path('', RedirectView.as_view(url=reverse_lazy('index')), name='landing'),
 ]

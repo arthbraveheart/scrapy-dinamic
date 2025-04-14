@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<form method="post" action="{% url 'run-spider' %}">
+    {% csrf_token %}
+    <button type="submit">Run Spider</button>
+</form>
+
+{% endblock %}
