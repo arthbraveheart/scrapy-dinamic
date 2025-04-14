@@ -1,5 +1,5 @@
 madeira:
-	cd core/apps/pricing_dular1 && python spider_madeira_selenium.py
+	cd core/apps/pricing_dular1 && python spider_madeira_async.py
 mercado_livre:
 	cd core/apps/m_livre && scrapy crawl ml_simple_db
 magalu:

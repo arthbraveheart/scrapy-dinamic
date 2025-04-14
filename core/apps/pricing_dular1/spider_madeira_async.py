@@ -64,8 +64,12 @@ async def process_ean(browser, semaphore, ean, product_name):
             url = f"{base_url}?q={encoded_query}"
 
             page = await browser.new_page()
-            await page.goto(url, timeout=60000)
-            await page.wait_for_selector('div.cav--c-gqwkJN', timeout=30000)
+            try:
+                await page.goto(url, timeout=1200000)
+                await page.wait_for_load_state()#wait_for_selector('div.cav--c-gqwkJN', timeout=30000)
+            except Exception as e:
+                print(f"Fail to load page for product {product_name}-{ean}:\n\t {e}")
+                return
 
             html = await page.content()
             await page.close()
@@ -75,7 +79,7 @@ async def process_ean(browser, semaphore, ean, product_name):
                 'class': 'cav--c-gqwkJN cav--c-gqwkJN-knmidH-justifyContent-spaceBetween cav--c-gqwkJN-ieFWNPI-css'})
 
             async with async_session() as session:
-                for element in elements:
+                for element in elements[:2]:
                     name, price = get_things_done(element)
                     price_val = float(price.replace('R$', '').replace('.', '').replace(',', '.').strip())
 
@@ -91,6 +95,9 @@ async def process_ean(browser, semaphore, ean, product_name):
                 print(f"Processed EAN: {ean}")
         except Exception as e:
             print(f"Error processing {ean}: {str(e)}")
+        finally:
+            if page and not page.is_closed():
+                await page.close()
 
 
 async def main():
