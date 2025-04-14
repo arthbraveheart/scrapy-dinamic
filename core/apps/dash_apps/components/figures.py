@@ -20,19 +20,18 @@ class ReportCharts:
 
     def get_table_chart_data(self):
 
+        columns = ('seller','name','price','ean',)
         # Start with the base query
-        query = Core.objects.all().values('seller','name','price','ean',)
+        data = Core.objects.all().values(*columns)
 
-        data = pd.DataFrame(list(query))
-
-        return data
+        return columns, data
 
     def table_chart_pbi(self):
 
-        table_data = self.get_table_chart_data()
+        columns, table_data = self.get_table_chart_data()
         return dag.AgGrid(
             id="raw_table_data",
-            rowData=table_data.to_dict("records"),
+            rowData=list(table_data),
             columnDefs=[{
                 "field": i,
                 "autoHeight": True,
@@ -40,9 +39,9 @@ class ReportCharts:
                 "resizable": True,
                 #"width": 500,
                 "filter": True,
-                         } for i in table_data.columns],
+                         } for i in columns],
             csvExportParams={
-                "fileName": "forms_data.csv",
+                "fileName": "pricing_data.csv",
                 "columnSeparator": ";",  # fiz the multiselect bug
             },
             columnSize="responsiveSizeToFit",

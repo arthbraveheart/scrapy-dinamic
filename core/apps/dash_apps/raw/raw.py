@@ -22,6 +22,7 @@ map_container = dcc.Loading(
     id="loading-table",
     type="dot",  # You can choose from "default", "circle", "dot", or "graph"
     children=[
+        html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-dark-blue mb-0 toast-btn"),
         ag_table_1
     ]
 )

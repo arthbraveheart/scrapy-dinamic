@@ -103,3 +103,4 @@ dash[diskcache]
 channels-redis
 django-markdownify
 markdown
+djangorestframework

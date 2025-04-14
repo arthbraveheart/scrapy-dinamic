@@ -1,4 +1,4 @@
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from ..components.figures import ReportCharts
 
 def register_map_callbacks(app):
@@ -7,7 +7,7 @@ def register_map_callbacks(app):
          ],
         [Input('user-store', 'data')]
     )
-    def update_map(user_data, user):
+    def update_table(user_data, user):
 
         chart_data = ReportCharts()
 
@@ -15,3 +15,14 @@ def register_map_callbacks(app):
         #user = None if user.is_manager else str(user)
 
         return [table]
+
+    @app.callback(
+        Output("raw_table_data", "exportDataAsCsv"),
+        Input("csv-button", "n_clicks"),
+        State("csv-button", "n_clicks"),
+        prevent_initial_call=True,
+    )
+    def export_data_as_csv(n_clicks, current_n_clicks):
+        if n_clicks and n_clicks > current_n_clicks:
+            return False
+        return True
