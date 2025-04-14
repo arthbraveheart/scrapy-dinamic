@@ -1,7 +1,7 @@
 from dash.dependencies import Input, Output, State
 from ..components.figures import ReportCharts
 
-def register_map_callbacks(app):
+def register_raw_callbacks(app):
     @app.callback(
         [Output('table', 'children'),
          ],

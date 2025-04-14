@@ -1,7 +1,8 @@
 from dash import html, dcc
 from django_plotly_dash import DjangoDash
 import dash_bootstrap_components as dbc
-from .craw import register_map_callbacks
+from .craw import register_raw_callbacks
+from datetime import date
 
 app = DjangoDash('Raw',
                  external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME],
@@ -18,13 +19,27 @@ app = DjangoDash('Raw',
 
 ag_table_1 = html.Div(id='table')
 
-map_container = dcc.Loading(
-    id="loading-table",
-    type="dot",  # You can choose from "default", "circle", "dot", or "graph"
-    children=[
-        html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-dark-blue mb-0 toast-btn"),
-        ag_table_1
-    ]
+map_container = html.Div([
+    html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-dark-blue mb-0 toast-btn"),
+    html.Div([
+        dcc.DatePickerRange(
+            id='my-date-picker-range',
+            min_date_allowed=date(2023, 12, 1),
+            max_date_allowed=date(2027, 12, 30),
+            initial_visible_month=date.today(),
+            end_date=(date.today()).replace(day=(date.today()).day + 1),
+            display_format='DD MMMM YYYY',
+        ),
+        html.Div(id='output-container-date-picker-range')
+    ]),
+    dcc.Loading(
+        id="loading-table",
+        type="dot",  # You can choose from "default", "circle", "dot", or "graph"
+        children=[
+            ag_table_1
+        ]
+    )
+]
 )
 
 app.layout = html.Div([
@@ -32,4 +47,4 @@ app.layout = html.Div([
     dcc.Store(id='user-store', data=True),
     ])
 
-register_map_callbacks(app)
+register_raw_callbacks(app)
