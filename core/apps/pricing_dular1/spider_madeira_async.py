@@ -35,7 +35,7 @@ async_session = async_sessionmaker(
 )
 
 base_url = 'https://www.madeiramadeira.com.br/busca'
-concurrency_limit = 10  # Adjust based on system capacity
+concurrency_limit = 4  # Adjust based on system capacity
 
 
 def get_things_done(element):
@@ -65,7 +65,7 @@ async def process_ean(browser, semaphore, ean, product_name):
 
             page = await browser.new_page()
             try:
-                await page.goto(url, timeout=1200000)
+                await page.goto(url, timeout=120000)
                 await page.wait_for_load_state()#wait_for_selector('div.cav--c-gqwkJN', timeout=30000)
             except Exception as e:
                 print(f"Fail to load page for product {product_name}-{ean}:\n\t {e}")
