@@ -10,7 +10,7 @@ from target.models import Core
 #import dash_bootstrap_components as dbc
 #import re
 #from django.db import connection
-#from django.db.models import Count, Case, When, IntegerField, Sum, F, Q
+from django.db.models import Count, Case, When, IntegerField, Sum, F, Q
 #from io import StringIO
 
 
@@ -18,11 +18,17 @@ engine = create_engine(settings.DB_URL)
 
 class ReportCharts:
 
+    def __init__(self, start_date, end_date):
+        self.start_date = start_date
+        self.end_date = end_date
+
     def get_table_chart_data(self):
 
-        columns = ('seller','name','price','ean',)
+        columns = ('seller','name','price','ean')
+        q_start = Q(date_now__gt=self.start_date)
+        q_end = Q(date_now__lt=self.end_date)
         # Start with the base query
-        data = Core.objects.all().values(*columns)
+        data = Core.objects.filter(q_start & q_end).values(*columns)
 
         return columns, data
 
@@ -32,14 +38,16 @@ class ReportCharts:
         return dag.AgGrid(
             id="raw_table_data",
             rowData=list(table_data),
-            columnDefs=[{
+            columnDefs=[
+            {
                 "field": i,
                 "autoHeight": True,
                 "wrapText": True,
                 "resizable": True,
                 #"width": 500,
                 "filter": True,
-                         } for i in columns],
+            } for i in columns
+            ],
             csvExportParams={
                 "fileName": "pricing_data.csv",
                 "columnSeparator": ";",  # fiz the multiselect bug
