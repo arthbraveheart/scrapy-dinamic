@@ -1,11 +1,96 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 
-{% block content %}
+{% block extrahead %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock extrahead %}
 
-<form method="post" action="{% url 'run-spider' %}">
-    {% csrf_token %}
-    <button type="submit">Run Spider</button>
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusTitle">Processing...</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped indeterminate" role="progressbar"></div>
+        </div>
+        <p id="statusMessage" class="mt-2"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form id="spiderForm" method="post" action="{% url 'run-spider' %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Run Spider</button>
 </form>
 
+<script>
+document.getElementById('spiderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+    const statusMessage = document.getElementById('statusMessage');
+
+    // Show modal
+    modal.show();
+    statusMessage.textContent = 'Your spider is running...';
+
+    // Start spider
+    fetch("{% url 'run-spider' %}", {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        body: new FormData(this)
+    })
+    .then(() => pollStatus(modal))
+    .catch(error => {
+        statusMessage.textContent = 'Failed to start spider: ' + error;
+    });
+});
+
+function pollStatus(modal, titleElement, messageElement) {
+    const checkInterval = setInterval(() => {
+        fetch(`{% url 'spider-status' %}?${Date.now()}`)  // Cache buster
+            .then(response => {
+                if (!response.ok) throw Error('Network error');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Current status:', data.status);
+
+                if (data.status === 'completed') {
+                    titleElement.textContent = 'Completed!';
+                    messageElement.textContent = 'Spider finished successfully.';
+                    clearInterval(checkInterval);
+                }
+                else if (data.status.startsWith('failed') || data.status.startsWith('error')) {
+                    titleElement.textContent = 'Failed!';
+                    messageElement.textContent = data.status;
+                    clearInterval(checkInterval);
+                }
+                // Keep "running" as default state
+            })
+            .catch(error => {
+                console.error('Polling error:', error);
+                messageElement.textContent = 'Connection error - retrying...';
+            });
+    }, 1500);  // Faster polling interval
+}
+</script>
+
+<style>
+.indeterminate {
+    width: 100%;
+    animation: progress 2s linear infinite;
+}
+@keyframes progress {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+</style>
 {% endblock %}

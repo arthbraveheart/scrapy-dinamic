@@ -1,15 +1,18 @@
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
-import subprocess
+from django.core.cache import cache
+from .tasks import run_spider_task
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 
 @require_POST
 def run_spider(request):
-    try:
-        # Run spider and stream logs to stdout/stderr
-        subprocess.run(
-            ["make", "mercado_livre"],
-            check=True
-        )
-        return HttpResponse("Spider completed successfully!")
-    except subprocess.CalledProcessError as e:
-        return HttpResponse(f"Spider failed: {str(e)}", status=500)
+    # Launch Celery task
+    run_spider_task.delay()
+    return HttpResponse("Spider started!")
+
+@api_view(['GET'])
+def spider_status(request):
+    status = cache.get('spider_status', 'idle')
+    return Response({'status': status})
