@@ -1,5 +1,5 @@
 from dash.dependencies import Input, Output, State
-from ..components.figures import ReportCharts
+from ..components.figures import ReportCharts, progress_bar_state
 from ..components.triggers import run_crawler
 from datetime import datetime, date
 from dash import callback_context, no_update
@@ -32,45 +32,69 @@ def register_raw_callbacks(app, manager):
         return True
 
     @app.callback(
-        [
-            Output('modal', 'is_open'),
-            Output('modal-message', 'children'),
-        ],
-        [
-            Input('crawler-button', 'n_clicks'),
-            Input('close', 'n_clicks'),  # Add close button as input
-        ],
-        [
-            State('sellers_drop', 'value'),
-            State('modal', 'is_open'),
-        ],
+        Output('modal', 'is_open'),
+        [Input('crawler-button', 'n_clicks'), Input('close', 'n_clicks')],
+        [State('modal', 'is_open')],
         prevent_initial_call=True,
-        background=True,
-        running=[
-            # Disable crawler button & keep modal open during execution
-            (Output("crawler-button", "disabled"), True, False),
-            (Output("modal", "is_open"), True, False),
-            (Output("modal-message", "children"), "Processing...", ""),
-        ],
     )
-    def update_prices(crawler_clicks, close_clicks, seller, is_open):
+    def toggle_modal(crawler_clicks, close_clicks, is_open):
         ctx = callback_context
         if not ctx.triggered:
-            return [is_open, ""]
+            return no_update
 
-        # Identify which component triggered the callback
-        trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-        if trigger_id == "close":
-            # Close modal immediately
-            return [False, no_update]
+        if trigger_id == 'crawler-button':
+            return True  # Open modal on crawler button click
+        elif trigger_id == 'close':
+            return False  # Close modal on close button click
 
-        elif trigger_id == "crawler-button":
-            # Run crawler in background
-            message = run_crawler(seller)
-            return [True, message]  # Keep modal open with final message
+        return is_open
 
-        return [is_open, ""]
+    @app.callback(
+        Output('modal-message', 'children'),
+        Input('crawler-button', 'n_clicks'),
+        [State('sellers_drop', 'value')],
+        background=True,
+        running=[
+            # Disable button and show processing message during execution
+            (Output("crawler-button", "disabled"), True, False),
+            (Output("modal-message", "children"), "Processing...", no_update),
+        ],
+        prevent_initial_call=True,
+    )
+    def run_crawler_background(n_clicks, seller):
+        if n_clicks and n_clicks > 0:
+            return run_crawler(seller)
+        return no_update
+
+    @app.callback(
+        output=Output("paragraph_id", "is_active"),
+        inputs=Input("button_id", "n_clicks"),
+        background=True,
+        running=[
+            (Output("crawler-button", "disabled"), True, False),
+            (Output('modal', 'is_open'), True, False)
+        ],
+        progress=[
+            Output("progress_bar", "value"),
+            Output("progress_bar", "max")
+        ],
+        cancel=Input("cancel_button_id", "n_clicks"),
+        prevent_initial_call=True
+    )
+    def update_progress(set_progress, _):
+        total = 0
+        just_a_list = []
+        now = datetime.now()
+
+        """
+        for i in range(total + 1):
+            just_a_list.append(i)
+            set_progress((str(i), str(total)))
+            time.sleep(0.01)"""
+
+        return True
 
     @app.callback(
         Output('output-container-date-picker-range', 'children'),

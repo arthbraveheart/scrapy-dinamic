@@ -35,6 +35,41 @@ drop_sellers = html.Div(id="drop_sellers", children=[
     )
 ])
 
+
+modal = dbc.Modal(
+            [
+                dbc.ModalHeader(
+                    dbc.ModalTitle("Your progress bar"),
+                    close_button=False
+                    # ^^ important, otherwise the user can close the modal
+                    #    but the callback will be running still
+                ),
+                dbc.ModalBody(
+                    html.Progress(
+                        id="progress_bar",
+                        value="0",
+                        style={'width': '100%'}
+                    )
+                ),
+                dbc.ModalFooter(
+                    dbc.Button(
+                        "Cancel",
+                        id="cancel_button_id",
+                        className="ms-auto",
+                        n_clicks=0
+                    )
+                )
+            ],
+            id="modal",
+            is_open=False,
+            backdrop="static",
+            keyboard=False
+            # ^^ important, otherwise the user can close the modal via the ESC button
+            #    but the callback will be running still
+        )
+
+
+
 map_container = html.Div([
     html.Div(className="row row-cols-1 row-cols-sm-1 row-cols-lg-3", children=
         [
@@ -64,17 +99,8 @@ map_container = html.Div([
             ag_table_1
         ]
     ),
-    dbc.Modal(
-            [
-                dbc.ModalHeader(dbc.ModalTitle("Crawler")),
-                dbc.ModalBody(id="modal-message"),
-                dbc.ModalFooter(
-                    dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
-                ),
-            ],
-            id="modal",
-            is_open=False,
-    ),
+   modal,
+   dbc.Modal("Done!!", id="paragraph_id"),
 ]
 )
 

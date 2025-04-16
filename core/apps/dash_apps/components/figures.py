@@ -2,7 +2,7 @@ import pandas as pd
 import dash_ag_grid as dag
 from sqlalchemy import create_engine, text
 from django.conf import settings
-from target.models import Core
+from target.models import Core, DularEans
 #from typing import List, Tuple, Optional
 #import plotly.express as px
 #import plotly.graph_objects as go
@@ -55,3 +55,12 @@ class ReportCharts:
             columnSize="responsiveSizeToFit",
             dashGridOptions={'pagination': True},
         )
+
+
+def progress_bar_state(seller, trigger_date):
+
+    total_eans = DularEans.objects.all().distinct().count()
+    enas_fetched = Core.objects.filter(seller=seller, date_now__gt=trigger_date).values('ean').distinct().count()
+
+
+
