@@ -32,53 +32,75 @@
 
 <script>
 document.getElementById('spiderForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
-    const statusMessage = document.getElementById('statusMessage');
-
-    // Show modal
-    modal.show();
-    statusMessage.textContent = 'Your spider is running...';
-
-    // Start spider
-    fetch("{% url 'run-spider' %}", {
-        method: 'POST',
-        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
-        body: new FormData(this)
-    })
-    .then(() => pollStatus(modal))
+  e.preventDefault();
+  const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+  const statusTitle = document.getElementById('statusTitle');
+  const statusMessage = document.getElementById('statusMessage');
+  
+  // Show modal and initialize messages
+  modal.show();
+  statusTitle.textContent = 'Processing...';
+  statusMessage.textContent = 'Your spider is running...';
+  
+  // Start spider
+  fetch("{% url 'run-spider' %}", {
+    method: 'POST',
+    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+    body: new FormData(this)
+  })
+    .then(() => pollStatus(modal, statusTitle, statusMessage))
     .catch(error => {
-        statusMessage.textContent = 'Failed to start spider: ' + error;
+      statusTitle.textContent = 'Error!';
+      statusMessage.textContent = 'Failed to start spider: ' + error;
+      // Add a close button or auto-close after error
     });
 });
 
 function pollStatus(modal, titleElement, messageElement) {
-    const checkInterval = setInterval(() => {
-        fetch(`{% url 'spider-status' %}?${Date.now()}`)  // Cache buster
-            .then(response => {
-                if (!response.ok) throw Error('Network error');
-                return response.json();
-            })
-            .then(data => {
-                console.log('Current status:', data.status);
-
-                if (data.status === 'completed') {
-                    titleElement.textContent = 'Completed!';
-                    messageElement.textContent = 'Spider finished successfully.';
-                    clearInterval(checkInterval);
-                }
-                else if (data.status.startsWith('failed') || data.status.startsWith('error')) {
-                    titleElement.textContent = 'Failed!';
-                    messageElement.textContent = data.status;
-                    clearInterval(checkInterval);
-                }
-                // Keep "running" as default state
-            })
-            .catch(error => {
-                console.error('Polling error:', error);
-                messageElement.textContent = 'Connection error - retrying...';
-            });
-    }, 1500);  // Faster polling interval
+  let attempts = 0;
+  const MAX_ATTEMPTS = 2000; // Maximum polling attempts (30 seconds with 1.5s interval)
+  
+  const checkInterval = setInterval(() => {
+    attempts++;
+    
+    if (attempts > MAX_ATTEMPTS) {
+      clearInterval(checkInterval);
+      titleElement.textContent = 'Timeout';
+      messageElement.textContent = 'Spider is taking too long. Check status later.';
+      return;
+    }
+    
+    fetch(`{% url 'spider-status' %}?${Date.now()}`)
+      .then(response => {
+        if (!response.ok) throw Error('Network error');
+        return response.json();
+      })
+      .then(data => {
+        // Update UI with current status
+        messageElement.textContent = data.message || data.status;
+        
+        if (data.status === 'completed') {
+          titleElement.textContent = 'Completed!';
+          messageElement.textContent = 'Spider finished successfully.';
+          clearInterval(checkInterval);
+          // Optional: auto-close modal after success
+          // setTimeout(() => modal.hide(), 3000);
+        } else if (data.status.startsWith('failed') || data.status.startsWith('error')) {
+          titleElement.textContent = 'Failed!';
+          messageElement.textContent = data.status;
+          clearInterval(checkInterval);
+        }
+      })
+      .catch(error => {
+        console.error('Polling error:', error);
+        messageElement.textContent = 'Connection error - retrying...';
+      });
+  }, 10000);
+  
+  // Add event listener to stop interval if modal is closed manually
+  document.getElementById('statusModal').addEventListener('hidden.bs.modal', function() {
+    clearInterval(checkInterval);
+  });
 }
 </script>
 
