@@ -7,6 +7,7 @@ import subprocess
 def run_spider_task():
     cache.set('spider_status', 'running', timeout=3600)  # 1-hour timeout
     try:
+        # Run your spider process
         subprocess.run(["make", "carrefas"], check=True)
         cache.set('spider_status', 'completed', timeout=300)
     except subprocess.CalledProcessError as e:
