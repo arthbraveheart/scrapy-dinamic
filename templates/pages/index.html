@@ -56,43 +56,46 @@
 document.getElementById('spiderForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+  modal.show(); // Show modal on form submission
+
+  fetch("{% url 'run-spider' %}", {
+    method: 'POST',
+    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+    body: new FormData(this)
+  }).catch(error => {
+    const statusTitle = document.getElementById('statusTitle');
+    const statusMessage = document.getElementById('statusMessage');
+    statusTitle.textContent = 'Error!';
+    statusMessage.textContent = 'Failed to start spider: ' + error;
+  });
+});
+
+// Handle modal show/hide events for polling
+const statusModal = document.getElementById('statusModal');
+let checkInterval = null;
+
+statusModal.addEventListener('show.bs.modal', function() {
   const statusTitle = document.getElementById('statusTitle');
   const statusMessage = document.getElementById('statusMessage');
   const progressBar = document.getElementById('progressBar');
   const progressStats = document.getElementById('progressStats');
 
-  // Show modal and initialize messages
-  modal.show();
+  // Initialize UI
   statusTitle.textContent = 'Processing...';
-  statusMessage.textContent = 'Your spider is running...';
+  statusMessage.textContent = 'Checking spider status...';
   progressBar.style.width = '0%';
   progressBar.setAttribute('aria-valuenow', 0);
-  progressBar.classList.add('indeterminate'); // Start with indeterminate animation
+  progressBar.classList.add('indeterminate');
 
-  // Start spider
-  fetch("{% url 'run-spider' %}", {
-    method: 'POST',
-    headers: {'X-CSRFToken': '{{ csrf_token }}'},
-    body: new FormData(this)
-  })
-    .then(() => pollStatus(modal, statusTitle, statusMessage, progressBar, progressStats))
-    .catch(error => {
-      statusTitle.textContent = 'Error!';
-      statusMessage.textContent = 'Failed to start spider: ' + error;
-    });
-});
-
-function pollStatus(modal, titleElement, messageElement, progressBar, progressStats) {
   let attempts = 0;
-  const MAX_ATTEMPTS = 2000; // Maximum polling attempts
+  const MAX_ATTEMPTS = 2000;
 
-  const checkInterval = setInterval(() => {
+  function checkStatus() {
     attempts++;
-
     if (attempts > MAX_ATTEMPTS) {
       clearInterval(checkInterval);
-      titleElement.textContent = 'Timeout';
-      messageElement.textContent = 'Spider is taking too long. Check status later.';
+      statusTitle.textContent = 'Timeout';
+      statusMessage.textContent = 'Spider is taking too long. Check status later.';
       return;
     }
 
@@ -102,53 +105,45 @@ function pollStatus(modal, titleElement, messageElement, progressBar, progressSt
         return response.json();
       })
       .then(data => {
-        // Update UI with current status
-        messageElement.textContent = data.message || data.status;
+        statusMessage.textContent = data.message || data.status;
 
-        // Update progress bar if we have progress data
         if (data.progress) {
-          const percentage = data.progress.percentage;
-          const completed = data.progress.completed;
-          const total = data.progress.total;
-
-          // Update progress statistics text
+          const { percentage, completed, total } = data.progress;
           progressStats.textContent = `${completed} / ${total} EANs processed`;
 
-          // Update progress bar
           if (data.status === 'running' && total > 0) {
-            // Switch from indeterminate to determinate progress
-            // progressBar.classList.remove('indeterminate');
             progressBar.style.width = `${percentage}%`;
             progressBar.setAttribute('aria-valuenow', percentage);
+            if (percentage > 0) progressBar.classList.remove('indeterminate');
           }
         }
 
         if (data.status === 'completed') {
-          titleElement.textContent = 'Completed!';
-          messageElement.textContent = 'Spider finished successfully.';
-
-          // Ensure progress bar shows 100%
-          progressBar.classList.remove('indeterminate');
+          statusTitle.textContent = 'Completed!';
           progressBar.style.width = '100%';
           progressBar.setAttribute('aria-valuenow', 100);
-
           clearInterval(checkInterval);
         } else if (data.status.startsWith('failed') || data.status.startsWith('error')) {
-          titleElement.textContent = 'Failed!';
-          messageElement.textContent = data.status;
+          statusTitle.textContent = 'Failed!';
           clearInterval(checkInterval);
         }
       })
       .catch(error => {
         console.error('Polling error:', error);
-        messageElement.textContent = 'Connection error - retrying...';
+        statusMessage.textContent = 'Connection error - retrying...';
       });
-  }, 2000); // Poll every 10 seconds
+  }
 
-  // Add event listener to stop interval if modal is closed manually
-  // document.getElementById('statusModal').addEventListener('hidden.bs.modal', function() {
-    // clearInterval(checkInterval);
-  // });
-}
+  // Immediate check and then every 2 seconds
+  checkStatus();
+  checkInterval = setInterval(checkStatus, 2000);
+});
+
+statusModal.addEventListener('hidden.bs.modal', function() {
+  if (checkInterval) {
+    clearInterval(checkInterval);
+    checkInterval = null;
+  }
+});
 </script>
 {% endblock extra_js %}
