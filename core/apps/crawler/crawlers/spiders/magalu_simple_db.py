@@ -23,7 +23,7 @@ class MagaluSpider(scrapy.Spider):
                     "x-oxylabs-geo-location":"Brazil",
                 },
                 meta={
-                    "proxy": 'https://ojin_brave_Ch4KD:+Dromedario17@unblock.oxylabs.io:60000',
+                    "proxy": 'https://zulunation_jYWRL:_TheoCuzcuz1728@unblock.oxylabs.io:60000',
                     "ean": ean,
                     "dont_verify_ssl": True,
                 },

@@ -28,7 +28,11 @@ class MLSpider(scrapy.Spider):
                 url = self.base_url.format(ean, ean)
                 yield scrapy.Request(
                     url,
+                    headers={
+                        "x-oxylabs-geo-location": "Brazil",
+                    },
                     meta={
+                        "proxy": 'https://zulunation_jYWRL:_TheoCuzcuz1728@unblock.oxylabs.io:60000',
                         "ean": ean,
                         "dont_verify_ssl": True,
                         #"db_row": dict(row)  # Optional: preserve row data

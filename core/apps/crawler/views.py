@@ -1,12 +1,23 @@
 from django.http import JsonResponse
 from django.core.cache import cache
+from .forms import SellerForm
 from .tasks import run_spider_task
 from target.models import DularEans, Core
 from datetime import datetime
+from django.views.generic import TemplateView
 
+
+def index(TemplateView):
+    template_name = 'pages/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = SellerForm()
+        return context
 
 def run_spider(request):
     if request.method == "POST":
+        form = SellerForm(request.POST)
         # Store the start time for progress tracking
         start_time = datetime.now()
         cache.set('spider_start_time', start_time.isoformat(), timeout=3600)
@@ -15,9 +26,11 @@ def run_spider(request):
         total_eans = DularEans.objects.all().distinct().count()
         cache.set('total_eans', total_eans, timeout=3600)
 
-        # Start the spider task
-        run_spider_task.delay()
-        return JsonResponse({"status": "started"})
+        if form.is_valid():
+            seller = form.cleaned_data['seller']
+            # Start the spider task
+            run_spider_task.delay(seller)
+            return JsonResponse({"status": "started"})
     return JsonResponse({"status": "method not allowed"}, status=405)
 
 
