@@ -32,22 +32,16 @@ def spider_status(request):
     completed_eans = 0
     percentage = 0
 
-    if start_time_str and status == 'running':
+    if status != 'not_started':
+        start_time_str = cache.get('spider_start_time')
         start_time = datetime.fromisoformat(start_time_str)
-        # Get count of unique EANs processed since starting the spider
         completed_eans = Core.objects.filter(
             date_now__gt=start_time
         ).values('ean').distinct().count()
-
-        # Calculate percentage (avoid division by zero)
-        percentage = int((completed_eans / total_eans * 100) if total_eans > 0 else 0)
-
-    elif status == 'completed':
-        completed_eans = Core.objects.filter(
-            date_now__gt=start_time
-        ).values('ean').distinct().count()
-
-        percentage = 100
+        if status == 'running':
+            percentage = int((completed_eans / total_eans * 100) if total_eans > 0 else 0)
+        elif status == 'completed':
+            percentage = 100
 
     return JsonResponse({
         "status": status,
