@@ -7,7 +7,7 @@ from datetime import datetime
 from django.views.generic import TemplateView
 
 
-def index(TemplateView):
+class index(TemplateView):
     template_name = 'pages/index.html'
 
     def get_context_data(self, **kwargs):
