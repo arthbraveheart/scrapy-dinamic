@@ -28,7 +28,7 @@ class ReportCharts:
         q_start = Q(date_now__gt=self.start_date)
         q_end = Q(date_now__lt=self.end_date)
         # Start with the base query
-        data = Core.objects.filter(q_start & q_end).values(*columns)
+        data = Core.objects.filter(q_start & q_end).order_by('-date_now').values(*columns)
 
         return columns, data
 
