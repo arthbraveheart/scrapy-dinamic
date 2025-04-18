@@ -15,5 +15,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5434/scrapy</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="scrapy@localhost [2]" uuid="050d7e2b-7ef2-4b37-a5b1-9e56342d0e52">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5434/scrapy</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

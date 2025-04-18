@@ -78,8 +78,7 @@ map_container = html.Div([
             ])
         ]
         ),
-    html.Button("Run!!", id="crawler-button", n_clicks=0, className="btn btn-dark-blue mb-0 toast-btn"),
-    html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-dark-blue mb-0 toast-btn"),
+    html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-primary mb-0 toast-btn"),
     html.Div([
         dcc.DatePickerRange(
             id='my-date-picker-range',
