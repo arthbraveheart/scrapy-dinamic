@@ -1,2 +1,2 @@
 # scrapy-dinamic
-Some scraping with scrapy and playwright to get data from dinamic webpages
+Django app with a powerful crawler based on scrapy to get prices from many brazilian Marketplaces.
