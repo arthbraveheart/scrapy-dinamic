@@ -1,8 +1,9 @@
+from typing import Optional
 from celery import shared_task
 from django.core.cache import cache
 from dash_apps.components.constants import MAKE_MAP
 import subprocess
-
+from .crawlers.triggers import SpiderRunner
 
 @shared_task
 def run_spider_task(seller: str = 'carrefas'):
@@ -16,3 +17,13 @@ def run_spider_task(seller: str = 'carrefas'):
     except Exception as e:
         cache.set('spider_status', f'error: {str(e)}', timeout=60)
 
+
+@shared_task
+def run_spider_Task(seller: str = 'carrefas_curva', curva : Optional[str] = None):
+    cache.set('spider_status', 'running', timeout=3600)  # 1-hour timeout
+    try:
+        runner = SpiderRunner()
+        runner.run(seller, curva)  # Pass `curva` to runner
+        cache.set('spider_status', 'completed', timeout=300)
+    except Exception as e:
+        cache.set('spider_status', f'error: {str(e)}', timeout=60)

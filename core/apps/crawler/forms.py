@@ -1,5 +1,7 @@
 from django import forms
 
+from target.models import Curva
+
 
 class SellerForm(forms.Form):
     MAKE_MAP = [
@@ -10,7 +12,22 @@ class SellerForm(forms.Form):
         #("testing", "testing"),
     ]
 
+    SPIDERS_MAP = [
+        ('ml_curva', "Mercado Livre"),
+        ("carrefas_curva", "Carrefour"),
+        ("madeira_curva", "Madeira Madeira"),
+        ("magalu_curva", "Magazine Luiza"),
+        # ("testing", "testing"),
+    ]
+
     seller = forms.ChoiceField(
-        choices=MAKE_MAP,
+        choices=MAKE_MAP,#SPIDERS_MAP,#MAKE_MAP,
         widget=forms.Select(attrs={'class': 'form-control'}),
         )
+
+    #curva = forms.ModelChoiceField(
+     #   queryset=Curva.objects.all(),#.values_list('name', flat=True),
+      #  to_field_name="name",
+       # widget=forms.Select(attrs={'class': 'form-control'}),
+    #)
+

@@ -1,10 +1,11 @@
 from django.http import JsonResponse
 from django.core.cache import cache
 from .forms import SellerForm
-from .tasks import run_spider_task
+from .tasks import run_spider_task, run_spider_Task
 from target.models import DularEans, Core
 from datetime import datetime
 from django.views.generic import TemplateView
+from target.models import Curva
 
 
 class index(TemplateView):
@@ -28,6 +29,11 @@ def run_spider(request):
 
         if form.is_valid():
             seller = form.cleaned_data['seller']
+            #if form.cleaned_data['curva']:
+             #   curva = form.cleaned_data['curva']
+              #  products = curva.products.all().values_list('ean', flat=True)
+               # run_spider_task.delay(seller, tuple(products))
+
             # Start the spider task
             run_spider_task.delay(seller)
             return JsonResponse({"status": "started"})

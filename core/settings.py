@@ -209,3 +209,4 @@ PLOTLY_DASH = {
 }
 
 sys.path.append(os.path.join(BASE_DIR, 'core/apps'))
+sys.path.append(os.path.join(BASE_DIR, 'core/apps/crawler'))
