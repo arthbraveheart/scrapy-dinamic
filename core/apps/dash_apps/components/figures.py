@@ -24,7 +24,7 @@ class ReportCharts:
 
     def get_table_chart_data(self):
 
-        columns = ('seller','name','price','ean')
+        columns = ('seller','name','price','ean','url')
         q_start = Q(date_now__gt=self.start_date)
         q_end = Q(date_now__lt=self.end_date)
         # Start with the base query
@@ -46,7 +46,14 @@ class ReportCharts:
                 "resizable": True,
                 #"width": 500,
                 "filter": True,
-            } for i in columns
+            } for i in columns[:-1]
+            ] + [
+                {
+                    "headerName": "Link",
+                    "field": "url",
+                    # stockLink function is defined in the dashAgGridComponentFunctions.js in assets folder
+                    "cellRenderer": "SellerLink",
+                },
             ],
             csvExportParams={
                 "fileName": "pricing_data.csv",
