@@ -6,7 +6,8 @@ class SellerForm(forms.Form):
         ('mercado_livre', "Mercado Livre"),
         ("carrefas", "Carrefour"),
         ("madeira", "Madeira Madeira"),
-        ("testing", "testing"),
+        ("magalu","Magazine Luiza"),
+        #("testing", "testing"),
     ]
 
     seller = forms.ChoiceField(
