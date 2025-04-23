@@ -1,0 +1,35 @@
+body {
+        font-family: 'Poppins', monospace;
+    }
+
+    .btn {
+        border-radius: 0.175rem;
+    }
+
+    .btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .icon .svg-inline--fa {
+        position: relative;
+        color: #fff;
+        opacity: 0.8;
+        top: 11px;
+    }
+
+    .indeterminate {
+        animation: progress 2s linear infinite;
+    }
+
+    @keyframes progress {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }

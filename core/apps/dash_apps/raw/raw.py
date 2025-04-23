@@ -23,11 +23,11 @@ app = DjangoDash('Raw',
 
 ## Graphs ##
 
-ag_table_1 = html.Div(id='table')
+ag_table_1 = html.Div(id='table', className="row")
 
 map_container = html.Div([
-    html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-primary mb-0 toast-btn"),
     html.Div([
+        html.Button("Download CSV", id="csv-button", n_clicks=0, className="btn btn-primary mb-0 toast-btn g-col-2 p-2"),
         dcc.DatePickerRange(
             id='my-date-picker-range',
             min_date_allowed=date(2023, 12, 1),
@@ -36,9 +36,9 @@ map_container = html.Div([
             start_date=date.today(),
             end_date=(date.today()).replace(day=(date.today()).day + 1),
             display_format='DD MMMM YYYY',
+            className="g-col-2"
         ),
-        html.Div(id='output-container-date-picker-range')
-    ]),
+    ], className="p-2 row grid"),
     dcc.Loading(
         id="loading-table",
         type="dot",  # You can choose from "default", "circle", "dot", or "graph"
