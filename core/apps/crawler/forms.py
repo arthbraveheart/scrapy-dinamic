@@ -21,6 +21,7 @@ class SellerForm(forms.Form):
     ]
 
     seller = forms.ChoiceField(
+        label="Escolha um concorrente para buscar os preços:",
         choices=MAKE_MAP,#SPIDERS_MAP,#MAKE_MAP,
         widget=forms.Select(attrs={'class': 'form-control'}),
         )
