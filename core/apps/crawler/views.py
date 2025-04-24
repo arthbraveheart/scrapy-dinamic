@@ -29,16 +29,15 @@ def run_spider(request):
 
         if form.is_valid():
             seller = form.cleaned_data['seller']
-            #if form.cleaned_data['curva']:
-             #   curva = form.cleaned_data['curva']
-              #  products = curva.products.all().values_list('ean', flat=True)
-               # run_spider_task.delay(seller, tuple(products))
-
-            # Start the spider task
-            run_spider_task.delay(seller)
+            if form.cleaned_data['curva']:
+                curva = form.cleaned_data['curva']
+                products = curva.products.all().values_list('ean', flat=True)
+                run_spider_Task.delay(seller, tuple(products))
+            else:
+                # Start the spider task
+                run_spider_task.delay(seller)
             return JsonResponse({"status": "started"})
     return JsonResponse({"status": "method not allowed"}, status=405)
-
 
 def spider_status(request):
     status = cache.get('spider_status', 'not_started')

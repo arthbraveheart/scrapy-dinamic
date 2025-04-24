@@ -1,4 +1,4 @@
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output, State, ClientsideFunction
 from ..components.figures import ReportCharts
 from datetime import datetime, date
 from dash import callback_context, no_update

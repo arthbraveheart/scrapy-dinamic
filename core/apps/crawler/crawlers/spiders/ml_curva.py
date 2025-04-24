@@ -98,5 +98,5 @@ class MLNewSpider(scrapy.Spider):
     def _get_query_params(self):
         """Return query parameters dictionary if needed, otherwise empty dict"""
         if self.eans:
-            return {'eans': self.eans}
+            return {'eans': tuple(self.eans)}
         return {}

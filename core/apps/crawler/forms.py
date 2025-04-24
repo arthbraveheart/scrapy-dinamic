@@ -22,13 +22,13 @@ class SellerForm(forms.Form):
 
     seller = forms.ChoiceField(
         label="Escolha um concorrente para buscar os preços:",
-        choices=MAKE_MAP,#SPIDERS_MAP,#MAKE_MAP,
+        choices=SPIDERS_MAP,#MAKE_MAP,
         widget=forms.Select(attrs={'class': 'form-control'}),
         )
 
-    #curva = forms.ModelChoiceField(
-     #   queryset=Curva.objects.all(),#.values_list('name', flat=True),
-      #  to_field_name="name",
-       # widget=forms.Select(attrs={'class': 'form-control'}),
-    #)
+    curva = forms.ModelChoiceField(
+        queryset=Curva.objects.all(),#.values_list('name', flat=True),
+        to_field_name="name",
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
 

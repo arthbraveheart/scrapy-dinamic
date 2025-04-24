@@ -40,6 +40,7 @@ class ReportCharts:
             rowData=list(table_data),
             columnDefs=[
             {
+                "headerName": i.title() if i!='name' else 'Product',
                 "field": i,
                 "autoHeight": True,
                 "wrapText": True,
