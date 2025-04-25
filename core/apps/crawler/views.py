@@ -32,7 +32,7 @@ def run_spider(request):
             if form.cleaned_data['curva']:
                 curva = form.cleaned_data['curva']
                 products = curva.products.all().values_list('ean', flat=True)
-                run_spider_Task.delay(seller, tuple(products))
+                run_spider_Task(seller, tuple(products))
             else:
                 # Start the spider task
                 run_spider_task.delay(seller)
